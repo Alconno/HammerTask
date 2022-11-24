@@ -1,0 +1,53 @@
+﻿@model Company.Models.Models.Employee
+
+<form method="post">
+    <input asp-for="employeeNo" hidden />
+    <div class="border p-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <h2 class="text-black-50 pl-3">Update Employee Salary</h2>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="employeeName">Employee name</label>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="Salary"></label>
+                    </div>
+                    <div class="col-4">
+                        <label>Percentage to alter salary</label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <span class="form-control">@Model.employeeName</>
+                    </div>
+                    <div class="col-4">
+                        <span class="form-control">@Model.Salary</>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" name="perc" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-8 offset-2 row">
+                        <div class="col">
+                            <input type="submit" class="btn btn-dark w-75" value="Update" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Update" asp-route-id="@Model.employeeNo" class="btn btn-dark w-75">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    }

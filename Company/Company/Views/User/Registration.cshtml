@@ -1,0 +1,57 @@
+﻿@model Company.Models.Models.Login
+
+@{
+    ViewData["Title"] = "Registration";
+}
+
+<h1>Registration</h1>
+
+@{
+    if(ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status)){
+        if(ViewBag.Message != null){
+    <div class="alert alert-success">
+                    <strong>Success! </strong>@ViewBag.Message
+    </div>
+        }
+    }
+    else{
+    <h4></h4>
+    <hr />
+    <div class="row">
+                @Html.AntiForgeryToken()
+                <div class="col-md-4">
+                    <form asp-action="Registration">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="loginUserName" class="control-label">Username</label>
+                            <input asp-for="loginUserName" class="form-control" />
+                            <span asp-validation-for="loginUserName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="loginPassword" class="control-label">Password</label>
+                            <input asp-for="loginPassword" class="form-control" />
+                            <span asp-validation-for="loginPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Register" class="btn btn-dark" />
+                        </div>
+                    </form>
+                </div>
+    </div>
+        if(ViewBag.Message != null){
+    <div class="alert alert-danger">
+                    <strong>Error! </strong>@ViewBag.Message
+    </div>
+        }
+    }
+}
+
+
+
+<div>
+    <a asp-action="Login">Login</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

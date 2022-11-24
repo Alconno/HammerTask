@@ -1,0 +1,58 @@
+﻿@using Newtonsoft.Json
+@model Company.Models.Models.Employee
+
+
+<form method="post">
+    <input asp-for="employeeNo" hidden />
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-black-50 pl-3">Add Employee</h2>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="employeeName">Employee Name</label>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="Salary"></label>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="EdepartmentNo">Department number</label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <input asp-for="employeeName" class="form-control"></>
+                        <span asp-validation-for="employeeName" class="text-danger"></span>
+                    </div>
+                    <div class="col-4">
+                        <input asp-for="Salary" class="form-control"></>
+                        <span asp-validation-for="Salary" class="text-danger"></span>
+                    </div>
+                    <div class="col-4">
+                        @Html.DropDownList("EdepartmentNo", (IEnumerable<SelectListItem>)ViewData["Departments"], new {@class="form-control"})
+                        <span asp-validation-for="EdepartmentNo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-8 offset-2 row">
+                        <div class="col">
+                            <input type="submit" class="btn btn-dark w-75" value="Add" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-dark w-75">Back</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+    }

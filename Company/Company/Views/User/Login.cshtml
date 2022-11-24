@@ -1,0 +1,40 @@
+﻿@model Company.Models.Models.LoginREST
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<h4></h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="loginUserName" class="control-label">Username</label>
+                <input asp-for="loginUserName" class="form-control" />
+                <span asp-validation-for="loginUserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="loginPassword" class="control-label">Password</label>
+                <input asp-for="loginPassword" class="form-control" />
+                <span asp-validation-for="loginPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-action="Login" type="submit" value="Login" class="btn btn-dark" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="User" asp-action="Registration">Register</a>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>"
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,137 @@
+﻿@using Company.Models.Models.Filters
+@model Pagination<Company.Models.Models.Employee>
+
+<div class="container p-4">
+    <div class="row pt-12">
+        <div class="col-6">
+            <h2 class="text-black pl-15">Employees</h2>
+        </div>
+
+        <div class="col-6  text-right">
+            <a asp-controller="Employee" asp-action="Create" class="btn btn-dark">Add Employee</a>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="col-12">
+        <form asp-action="Index"
+              asp-route-sortOrder="@ViewData["CurrentSort"]"
+              asp-route-pageNumber="@(Model.pageIndex)"
+              asp-route-currentFilter="@ViewData["CurrentFilter"]"
+              asp-route-currentPageSize="@ViewData["CurrentPageSize"]">
+            <div class="form-action no-color">
+                <p>
+                    Find by filter: <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+                    <input type="submit" value="Search" class="btn btn-dark" /> 
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-currentPageSize="@ViewData["CurrentPageSize"]"> Show Unfiltered List</a>
+                </p>
+            </div>
+        </form>
+    </div>
+
+    @if (Model.Count() > 0)
+    {
+        <table id="EmployeeTableId" class="table table-bordered table-striped" stype="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Employee Name</a>
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["SalaryParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Salary</a>
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["DepartmentNoParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Department</a>
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["lastModifyDateParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Last modified</a>
+                    </th>
+                    <th>
+                        Changes
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in Model)
+                {
+                    <tr>
+                        <td width="10%">@Html.DisplayFor(modelItem => employee.employeeName)</td>
+                        <td width="10%">@Html.DisplayFor(modelItem => employee.Salary)€</td>
+                        <td width="10%"> 
+                            <a asp-action="Index" asp-route-currentDepartmentId="@employee.EdepartmentNo" width="10%">@Html.DisplayFor(modelItem => employee.EdepartmentNo)  </a>
+                            @{
+                                if (TempData["selectedDepartmentId"] != null)
+                                {
+                                    if (int.TryParse(TempData["selectedDepartmentId"].ToString(), out int intValue))
+                                    {
+                                        if (intValue == employee.EdepartmentNo)
+                                        {
+                                            <a>   -  (@TempData["selectedDepartmentName"], @TempData["selectedDepartmentLocation"])</a>
+                                        }
+                                    }
+                                }else{
+                                        <a> </a>
+                                }
+                            }
+
+                        </td>
+                        <td width="10%">@Html.DisplayFor(modelItem => employee.lastModifyDate)</td>
+                        <td width="10%">
+                            <div class="w-100 btn-group" role="group">
+                                <a asp-controller="Employee" asp-action="Update" asp-route-id="@employee.employeeNo" class="btn btn-dark mx-1">Update</a>
+                                <a asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.employeeNo" class="btn btn-danger mx-1">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+        <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.pageIndex-1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-currentPageSize="@ViewData["CurrentPageSize"]"
+       class="btn btn-default @prevDisabled">
+            Previous
+        </a>
+
+        <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.pageIndex+1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-currentPageSize="@ViewData["CurrentPageSize"]"
+       class="btn btn-default @nextDisabled">
+            Next
+        </a>
+
+        <div class="col-12">
+            <form asp-action="Index"
+              asp-route-sortOrder="@ViewData["CurrentSort"]"
+              asp-route-pageNumber="@(Model.pageIndex)"
+              asp-route-currentFilter="@ViewData["CurrentFilter"]"
+              asp-route-currentPageSize="@ViewData["CurrentPageSize"]">
+                <div class="form-action no-color">
+                    <p>
+                        Table page size: <input type="number" name="currentPageSize" value="@ViewData["CurrentPageSize"]" />
+                        <input type="submit" value="Set" class="btn btn-dark" />
+                    </p>
+                </div>
+            </form>
+        </div>
+
+    }
+    else
+    {
+        <p>No items created yet</p>
+    }
+
+
+
+</div>
