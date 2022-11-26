@@ -112,6 +112,7 @@ namespace Company
             services.AddScoped<IEncrypt, Encrypt>();
             //services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped<ITokenService, TokenService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -18,6 +18,8 @@ namespace Company.Services.Services
         Task<Employee> UpdateAsync(int No, Employee entity);
         Task<Employee> ChangeSalary(int No, int perc);
         Task<string> exportEmployeeTable();
+        Task<IEnumerable<(Employee Employee, Department Department)>> GetCombinedObjectList();
+        Task DoLinqThings();
 
     }
 }

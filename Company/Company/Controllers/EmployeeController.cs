@@ -34,6 +34,7 @@ namespace Company.Controllers
             int?pageNumber, int pageSize, int currentPageSize, int? currentDepartmentId)
         {
             string exportedEmployeeTable = await _employeeService.exportEmployeeTable();
+            await _employeeService.DoLinqThings();
 
             ViewData["CurrentSort"] = sortOrder;
             ViewData["EmployeeNoParam"] = string.IsNullOrEmpty(sortOrder) ? "numDesc" : "";
@@ -74,7 +75,7 @@ namespace Company.Controllers
         {
             ViewData["Departments"] = (await GetDepartmentList()).Select(obj => new SelectListItem
             {
-                Text="("+obj.departmentNo+") "+obj.departmentName+", "+obj.departmentLocation,
+                Text=$"({obj.departmentNo}) {obj.departmentName}, {obj.departmentLocation}",
                 Value=obj.departmentNo.ToString()
             }).ToList();
             return await Task.FromResult(View());
@@ -110,10 +111,10 @@ namespace Company.Controllers
         // GET Update
         public async Task<IActionResult>Update(int id)
         {
-            
+
             ViewData["Departments"] = (await GetDepartmentList()).Select(obj => new SelectListItem
             {
-                Text="("+obj.departmentNo+") "+obj.departmentName+", "+obj.departmentLocation,
+                Text=$"({obj.departmentNo}) {obj.departmentName}, {obj.departmentLocation}",
                 Value=obj.departmentNo.ToString()
             }).ToList();
             var obj = await _employeeService.GetAsync(id);
