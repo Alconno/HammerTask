@@ -1,4 +1,5 @@
 ﻿using Company.Models;
+using Company.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,14 +13,18 @@ namespace Company.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IHomeService _homeService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService)
         {
             _logger = logger;
+            _homeService = homeService;
+
         }
 
         public IActionResult Index()
         {
+            _homeService.addDefaultData();
             return View();
         }
 

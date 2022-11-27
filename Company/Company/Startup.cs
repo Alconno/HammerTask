@@ -110,6 +110,7 @@ namespace Company
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IEncrypt, Encrypt>();
+            services.AddScoped<IHomeService, HomeService>();
             //services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped<ITokenService, TokenService>();
             

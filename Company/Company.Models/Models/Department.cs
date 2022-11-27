@@ -21,5 +21,6 @@ namespace Company.Models.Models
         [Required]
         [StringLength(20)]
         public string departmentLocation { get; set; }
+
     }
 }

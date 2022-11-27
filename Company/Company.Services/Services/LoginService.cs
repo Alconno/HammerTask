@@ -20,10 +20,10 @@ namespace Company.Services.Services
         {
             _db=db;
         }
-    
+
         public async Task<Login> CreateAsync(Login entity)
         {
-            if(entity.loginUserName.Length <= 20)
+            if (entity.loginUserName.Length <= 20)
             {
                 _db.Logins.Add(entity);
                 _db.SaveChanges();
@@ -35,7 +35,7 @@ namespace Company.Services.Services
         public async Task<bool> DeleteAsync(int No)
         {
             var obj = await Task.FromResult(_db.Logins.Find(No));
-            if(obj != null)
+            if (obj != null)
             {
                 _db.Logins.Remove(obj);
                 _db.SaveChanges();
@@ -43,7 +43,7 @@ namespace Company.Services.Services
             }
             return false;
         }
-        
+
         public async Task<IQueryable<Login>> GetAllAsync()
         {
             return await Task.FromResult(_db.Logins);
@@ -79,7 +79,7 @@ namespace Company.Services.Services
         public async Task<Login> GetAsync(string name)
         {
             var listWithMatchingUsernames = _db.Logins.Where(n => n.loginUserName == name).ToListAsync().Result;
-            if(listWithMatchingUsernames.Count()>=1) return await Task.FromResult(listWithMatchingUsernames.ElementAt(0));
+            if (listWithMatchingUsernames.Count()>=1) return await Task.FromResult(listWithMatchingUsernames.ElementAt(0));
             return null;
         }
 
