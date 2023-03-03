@@ -1,4 +1,6 @@
 ﻿using Company.Models.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -18,12 +20,13 @@ namespace Company.Services.Services
             var claims = new[] {
             new Claim(ClaimTypes.Name, user.loginUserName),
             new Claim(ClaimTypes.NameIdentifier, user.loginPassword)
-        };
+            };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
             var tokenDescriptor = new JwtSecurityToken(issuer, issuer, claims,
                 expires: DateTime.Now.AddMinutes(EXPIRY_DURATION_MINUTES), signingCredentials: credentials);
+
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
         public bool ValidateToken(string key, string issuer, string token)

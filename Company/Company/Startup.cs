@@ -28,6 +28,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Identity;
 
 namespace Company
 {
@@ -83,25 +88,47 @@ namespace Company
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Company.Services"))
             );
 
-            // Authentication with Bearer and JWT configuration
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            services.AddAuthentication(options =>
             {
-                options.SaveToken = true;
+                options.DefaultScheme = "JWT_OR_COOKIE";
+                options.DefaultChallengeScheme = "JWT_OR_COOKIE";
+            })
+            .AddCookie(options =>
+            {
+                options.LoginPath =  "/User/google-auth";
+                options.ExpireTimeSpan = TimeSpan.FromDays(1);
+            })
+            .AddGoogle(options =>
+            {
+                options.ClientId="118256856010-ti3nr9054rlf0u5me9kgrf79cubu53u6.apps.googleusercontent.com";
+                options.ClientSecret="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";
+            })
+            .AddJwtBearer(options =>
+            {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
                     ValidIssuer = Configuration["Jwt:Issuer"],
                     ValidAudience = Configuration["Jwt:Issuer"],
+                    ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new
-                    SymmetricSecurityKey
-                    (Encoding.UTF8.GetBytes
-                    (Configuration["Jwt:Key"]))
+                                SymmetricSecurityKey
+                                (Encoding.UTF8.GetBytes
+                                (Configuration["Jwt:Key"]))
+                };
+            })
+            .AddPolicyScheme("JWT_OR_COOKIE", "JWT_OR_COOKIE", options =>
+            {
+                options.ForwardDefaultSelector = context =>
+                {
+                    string authorization = context.Request.Headers[HeaderNames.Authorization];
+                    if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer "))
+                        return JwtBearerDefaults.AuthenticationScheme;
+
+                    return CookieAuthenticationDefaults.AuthenticationScheme;
                 };
             });
-
 
 
 
@@ -132,11 +159,16 @@ namespace Company
             app.UseSession();
             app.Use(async (context, next) =>
             {
-                var token = context.Session.GetString("Token");
-                if (!string.IsNullOrEmpty(token))
+                var path = context.Request.Path;
+                if (path.Value.Contains("/swagger/", StringComparison.OrdinalIgnoreCase))
                 {
-                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                    if (!context.User.Identity.IsAuthenticated)
+                    {
+                        context.Response.Redirect("/login");
+                        return;
+                    }
                 }
+
                 await next();
             });
 

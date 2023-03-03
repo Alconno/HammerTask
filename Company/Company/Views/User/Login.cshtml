@@ -13,6 +13,9 @@
         <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+            <a class="form-group text-dark" asp-area="" asp-route-RequestMadeFrom="Login" asp-controller="User" asp-action="GoogleAuth">Login over Google</a>
+            </div>
+            <div class="form-group">
                 <label asp-for="loginUserName" class="control-label">Username</label>
                 <input asp-for="loginUserName" class="form-control" />
                 <span asp-validation-for="loginUserName" class="text-danger"></span>
